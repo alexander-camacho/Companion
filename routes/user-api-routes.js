@@ -20,20 +20,20 @@ module.exports = function (app) {
   // how we configured our Sequelize User Model. If the user is created successfully, proceed to log the user in,
   // otherwise send back an error
   app.post("/api/signup", (req, res) => {
-    
+
     db.User.create(req.body)
-    .then(() => {
-      res.redirect(307, "/api/login");
-    })
-    .catch(err => {
-      res.status(401).json(err);
-    });
+      .then(() => {
+        res.redirect(307, "/api/login");
+      })
+      .catch(err => {
+        res.status(401).json(err);
+      });
   });
 
 
   //Route for saving a new profile image
   app.post("/uploadProfile", uploadimagemulter.single("file"), uploadprofile.uploadProfileImage);
-  
+
 
   // Route for logging user out
   app.get("/logout", (req, res) => {
@@ -64,37 +64,37 @@ module.exports = function (app) {
 
   // Route for getting data on all members
   app.get("/api/members", (req, res) => {
-    
+
     db.User.findAll({})
-    .then(function(data) {
-     
-      const userData =  data.map(data => {
-      return Object.assign({}, {
-        displayName: data.displayName,
-        id: data.id
-     })
-     })
-      res.json(userData);
-    });
+      .then(function (data) {
+
+        const userData = data.map(data => {
+          return Object.assign({}, {
+            displayName: data.displayName,
+            id: data.id
+          })
+        })
+        res.json(userData);
+      });
   })
 
   app.get("/api/members/:id", (req, res) => {
-    
+
     db.User.findOne({
       where: {
         id: req.params.id
       },
       include: [{
         model: db.Image,
-      include: [{
-        model: db.Comment
-      },{
-        model: db.Like
+        include: [{
+          model: db.Comment
+        }, {
+          model: db.Like
+        }]
       }]
-      }]
-      })
-      .then(function(user){
-      
+    })
+      .then(function (user) {
+
         var object = {
           user: {
             userId: user.id,
@@ -106,20 +106,20 @@ module.exports = function (app) {
       })
   })
 
-  app.put('/uploadProfile', (req,res) => {
+  app.put('/uploadProfile', (req, res) => {
     const idUser = req.user.id
     db.User.update(
       {
-          displayName: req.body.displayName,
-          favorites: req.body.favorites,
-          location: req.body.location,
-          birthday: req.body.birthday
+        displayName: req.body.displayName,
+        favorites: req.body.favorites,
+        location: req.body.location,
+        birthday: req.body.birthday
       },
       {
         where: {
           id: req.user.id
         }
-    
+
       }).then(() => {
         res.redirect("/members/" + idUser);
       });

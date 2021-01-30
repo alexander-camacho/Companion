@@ -1,7 +1,7 @@
 // Requiring necessary npm packages
 const express = require("express");
 const session = require("express-session");
-var bodyparser = require('body-parser'); 
+var bodyparser = require('body-parser');
 // Requiring passport as we've configured it
 const passport = require("./config/passport");
 // Defines global variable for basedir
@@ -14,7 +14,7 @@ const db = require("./models");
 // Creating express app and configuring middleware needed for authentication
 const app = express();
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyparser.urlencoded({extended : true}))
+app.use(bodyparser.urlencoded({ extended: true }))
 app.use(express.json());
 app.use(express.static("public"));
 

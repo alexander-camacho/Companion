@@ -6,7 +6,7 @@ const isAuthenticated = require("../config/middleware/isAuthenticated");
 const db = require("../models")
 const id = '';
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.get("/", (req, res) => {
     // If the user already has an account send them to the members page
     if (req.user) {
@@ -28,22 +28,22 @@ module.exports = function(app) {
   // Here we've add our isAuthenticated middleware to this route.
   // If a user who is not logged in tries to access this route they will be redirected to the signup page
   app.get("/members/:id", isAuthenticated, (req, res) => {
-    
+
     db.User.findOne({
       where: {
         id: req.params.id
       },
       include: [{
         model: db.Image,
-      include: [{
-        model: db.Comment
-      },{
-        model: db.Like
+        include: [{
+          model: db.Comment
+        }, {
+          model: db.Like
+        }]
       }]
-      }]
-      })
-      .then(function(user){
-      
+    })
+      .then(function (user) {
+
         var object = {
           user: {
             userId: user.id,
@@ -58,7 +58,7 @@ module.exports = function(app) {
         res.render("members", object);
       })
   })
-  
+
   //if the user is signed in they can access the page to edit their profile image
   app.get("/profileimage", isAuthenticated, (req, res) => {
     res.render("profileImage");
@@ -81,5 +81,5 @@ module.exports = function(app) {
     }
 
     res.render("notfound", userPage);
-  });  
+  });
 };

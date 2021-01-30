@@ -4,7 +4,7 @@ const db = require("../../models");
 const Image = db.Image;
 
 const uploadFiles = async (req, res) => {
-  
+
   const user_Id = req.user.id
   try {
 
@@ -14,9 +14,9 @@ const uploadFiles = async (req, res) => {
 
     Image.create({
       caption: req.body.caption,
-      name:  `/uploads/${req.file.filename}`,
+      name: `/uploads/${req.file.filename}`,
       UserId: req.user.id
-      
+
     }).then(() => {
       res.redirect("/members/" + user_Id);
     });
